@@ -1,0 +1,67 @@
+# name: Build and Push to ECR
+
+# on:
+#   push:
+#     paths:
+#       - 'src/**'
+#       - '.github/workflows/ci.yml'
+#     branches:
+#       - main
+
+# jobs:
+#   build-and-push:
+#     name: Build, Push to ECR, and Update Values.yaml
+#     runs-on: ubuntu-latest
+
+#     permissions:
+#       id-token: write
+#       contents: write   # Needed to push to the manifests repo
+
+#     env:
+#       ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+#       AWS_REGION: ${{ secrets.AWS_REGION }}
+#       GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+#     steps:
+#     - name: Checkout app code
+#       uses: actions/checkout@v4
+
+#     - name: Configure AWS credentials (OIDC)
+#       uses: aws-actions/configure-aws-credentials@v4
+#       with:
+#         role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
+#         aws-region: ${{ env.AWS_REGION }}
+
+#     - name: Get Git commit SHA
+#       id: vars
+#       run: echo "GIT_SHA=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
+
+#     - name: Log in to Amazon ECR
+#       uses: aws-actions/amazon-ecr-login@v2
+
+#     - name: Build Docker image
+#       run: |
+#         docker build -t $ECR_REPOSITORY:app-${GIT_SHA} .
+
+#     - name: Push Docker image to ECR
+#       run: |
+#         docker push $ECR_REPOSITORY:app-${GIT_SHA}
+
+#     - name: Clone manifests repo
+#       run: |
+#         git clone https://x-access-token:$GITHUB_TOKEN@github.com/anzhela-iondem/FP_1_kube_argocd.git
+#         ls
+
+#     - name: Update image tag in values.yaml
+#       run: |
+#         sed -i "s|tag: .*|tag: app-${GIT_SHA}|" FP_1_kube_argocd/kube-gitops/helm/fake-project-app/values.yaml
+#         cat FP_1_kube_argocd/kube-gitops/helm/fake-project-app/values.yaml
+
+#     - name: Commit and push changes to manifests repo
+#       run: |
+#         cd FP_1_kube_argocd/
+#         git config user.name "GitHub Actions Bot"
+#         git config user.email "actions@github.com"
+#         git remote set-url origin https://x-access-token:$GITHUB_TOKEN@github.com/anzhela-iondem/FP_1_kube_argocd.git
+#         git commit -a -m "Update image tag to app-${GIT_SHA}" || echo "No changes to commit"
+#         git push origin main
