@@ -4,7 +4,7 @@ const PORT = 3000;
 
 app.get('/', (req, res) => {
   res.status(200).send(`
-    <h1 style="font-size: 52x; font-weight: bold; color: white; background-color: blue;">
+    <h1 style="font-size: 42x; font-weight: bold; color: white; background-color: blue;">
       Welcome to the Root URL of this Server!
     </h1>
   `);
