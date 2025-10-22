@@ -21,7 +21,7 @@ permissions:
 jobs:
   bump-version:
     #if: github.event.pull_request.merged == true
-    runs-on: ubuntu-runners-amd64-gcp
+    runs-on: ubuntu-runners-amd64-gcp-2
 
     steps:
       - name: Checkout repository
