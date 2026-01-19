@@ -8,9 +8,9 @@ name: Running E2E Tests every 1 hours with master branch
 run-name: Running E2E Tests every 1 hours. Staging ${{github.ref_name}} to stage by @${{github.actor}}
 
 on:
-  schedule:
-    # Runs every 2 hours (UTC) Monday through Friday
-    - cron: '* */1 * * 1-5' 
+  # schedule:
+  #   # Runs every 2 hours (UTC) Monday through Friday
+  #   - cron: '* */1 * * 1-5' 
 
   workflow_dispatch:
   # pull_request:
