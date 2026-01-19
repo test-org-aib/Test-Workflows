@@ -3,9 +3,15 @@
 # The updated file is then committed back to the master/main branch of the repository.
 
 
-name: Increment the Patch Version on Merge to main
+#name: Increment the Patch Version on Merge to main
+name: Running E2E Tests every 2 hours with master branch
+run-name: Running E2E Tests every 2 hours. Staging ${{github.ref_name}} to stage by @${{github.actor}}
 
 on:
+  schedule:
+    # Runs every 2 hours (UTC) Monday through Friday
+    - cron: '0 */2 * * 1-5'
+
   workflow_dispatch:
   # pull_request:
   #   branches:
